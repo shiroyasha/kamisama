@@ -22,10 +22,14 @@ describe Kamisama do
   it "restarts failed workers" do
     children = SpecHelpers.child_pids(@pid)
 
-    Process.kill("KILL", children.first)
+    puts "Killing #{children.first}"
+    Process.kill("TERM", children.first)
+
+    sleep 4
+    expect(SpecHelpers.child_count(@pid)).to eq(2)
 
     # wait for worker to respawn
-    sleep 1
+    sleep 10
 
     expect(SpecHelpers.child_count(@pid)).to eq(3)
   end

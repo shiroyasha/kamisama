@@ -17,10 +17,20 @@ module Kamisama
         rescue Exception => e
           # handle all exceptions, even system ones
           log("Shutting down... #{e.message}")
+          exit
         ensure
           exit
         end
       end
+
+      Process.detach(@pid)
+    end
+
+    def alive?
+      Process.getpgid(@pid)
+      true
+    rescue Errno::ESRCH
+      false
     end
 
     def log(message)

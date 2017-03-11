@@ -17,7 +17,21 @@ module Kamisama
 
     tasks.each(&:start)
 
-    Process.waitall
+    monitor(tasks)
+  end
+
+  def monitor(tasks)
+    loop do
+      tasks.each do |task|
+        puts "test"
+        unless task.alive?
+
+          puts "REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+        end
+      end
+
+      sleep 2
+    end
   end
 
 end
