@@ -1,6 +1,6 @@
 require "ffi"
 
-module Kamisama
+class Kamisama
   class ProcessCtrl
     SIGINT = 2
     SIGTERM = 15

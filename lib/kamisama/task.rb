@@ -1,6 +1,6 @@
-module Kamisama
+class Kamisama
   class Task
-    def initialize(task_index, &block)
+    def initialize(task_index, block)
       @task_index = task_index
       @block = block
     end
