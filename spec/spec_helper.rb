@@ -8,6 +8,10 @@ module SpecHelpers
   def child_count(pid)
     Sys::ProcTable.ps.select { |process| process.ppid == pid }.count
   end
+
+  def child_pids(pid)
+    Sys::ProcTable.ps.select { |process| process.ppid == pid }.map(&:pid)
+  end
 end
 
 class TestApp
