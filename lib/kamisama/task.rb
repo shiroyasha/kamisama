@@ -26,6 +26,11 @@ module Kamisama
       Process.detach(@pid)
     end
 
+    def restart!
+      @pid = nil
+      start
+    end
+
     def alive?
       Process.getpgid(@pid)
       true

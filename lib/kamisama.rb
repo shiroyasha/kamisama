@@ -23,11 +23,7 @@ module Kamisama
   def monitor(tasks)
     loop do
       tasks.each do |task|
-        puts "test"
-        unless task.alive?
-
-          puts "REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
-        end
+        task.restart! unless task.alive?
       end
 
       sleep 2

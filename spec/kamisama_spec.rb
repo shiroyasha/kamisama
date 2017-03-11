@@ -25,11 +25,11 @@ describe Kamisama do
     puts "Killing #{children.first}"
     Process.kill("TERM", children.first)
 
-    sleep 4
+    sleep 1
     expect(SpecHelpers.child_count(@pid)).to eq(2)
 
     # wait for worker to respawn
-    sleep 10
+    sleep 4
 
     expect(SpecHelpers.child_count(@pid)).to eq(3)
   end
