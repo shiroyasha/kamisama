@@ -1,21 +1,18 @@
 require "kamisama/version"
+require "kamisama/process_ctrl"
+require "kamisama/task"
 
 module Kamisama
   module_function
 
-  @@children = []
-
   def run(options = {}, &block)
     instances = options.fetch(:instances)
 
-    instances.times do |index|
-      puts "[Kamisama] Starting worker #{index}"
+    tasks = Array.new(instances) { |index| Kamisama::Task.new(index, &block) }
 
-      @@children << Process.fork do
-        block.call(index)
-      end
+    tasks.each(&:start)
 
-    end
+    Process.waitall
   end
 
 end

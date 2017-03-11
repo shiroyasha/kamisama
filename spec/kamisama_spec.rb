@@ -20,12 +20,12 @@ describe Kamisama do
       end
 
       puts "Observing process"
-      sleep 10
+      sleep 3
 
       puts "Killing process"
       Process.kill("KILL", pid)
 
-      sleep 2
+      sleep 1
 
       system("ps aux | grep 'ruby' | grep 'kamisama'")
       system('ps aux | grep "kamisama" | grep "ruby" | awk \'{ print $2 }\' | xargs kill')
