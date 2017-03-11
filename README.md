@@ -8,16 +8,16 @@ Kamisama start multiple background processes, and restarts them in case they
 die.
 
 ``` ruby
-def worker
+Kamisama.run(:instances => 10) do |worker_index|
   loop do
-    puts "Doing some background work"
+    puts "Worker #{worker_index}: Crunching data."
 
     sleep 1
   end
 end
-
-Kamisama.run(:instances => 10) { worker }
 ```
+
+Each worker is a forked process.
 
 ## License
 

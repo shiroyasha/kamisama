@@ -17,6 +17,8 @@ module Kamisama
         rescue Exception => e
           # handle all exceptions, even system ones
           log("Shutting down... #{e.message}")
+        ensure
+          exit
         end
       end
     end
