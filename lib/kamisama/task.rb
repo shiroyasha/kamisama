@@ -8,8 +8,10 @@ module Kamisama
     def start
       @pid = Process.fork do
         begin
+          # receive sigterm when parent dies
+          Kamisama::ProcessCtrl.set_parent_death_signal(:sigterm)
+
           log("Worker started. Hello!")
-          Kamisama::ProcessCtrl.set_parent_death_signal(Kamisama::ProcessCtrl::LibC::SIGTERM)
 
           @block.call(@task_index)
         rescue Exception => e

@@ -1,34 +1,19 @@
 require "spec_helper"
 
 describe Kamisama do
-  it 'has a version number' do
+  it "has a version number" do
     expect(Kamisama::VERSION).not_to be nil
   end
 
   describe ".run" do
     it "starts multiple instances" do
+      pid = TestApp.start(:workers => 3)
 
-      pid = Process.fork do
-        Kamisama.run(:instances => 3) do |index|
+      expect(SpecHelpers.child_count(pid)).to eq(3)
 
-          while true
-            puts "a #{index}"
-            sleep 2
-          end
+      TestApp.stop(pid, :signal => "KILL")
 
-        end
-      end
-
-      puts "Observing process"
-      sleep 3
-
-      puts "Killing process"
-      Process.kill("KILL", pid)
-
-      sleep 1
-
-      system("ps aux | grep 'ruby' | grep 'kamisama'")
-      system('ps aux | grep "kamisama" | grep "ruby" | awk \'{ print $2 }\' | xargs kill')
+      expect(SpecHelpers.child_count(pid)).to eq(0)
     end
   end
 end

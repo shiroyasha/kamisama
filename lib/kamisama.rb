@@ -6,7 +6,12 @@ module Kamisama
   module_function
 
   def run(options = {}, &block)
+    puts "[Kamisama Master] Process id: #{Process.pid}"
+
     instances = options.fetch(:instances)
+
+    puts "[Kamisama Master] Starting #{instances} workers"
+    puts
 
     tasks = Array.new(instances) { |index| Kamisama::Task.new(index, &block) }
 
