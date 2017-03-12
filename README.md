@@ -4,6 +4,8 @@
 
 Start, monitor, and observe background worker processes, from Ruby.
 
+Based on [Unicorn](), [God](), and [Sidekiq]().
+
 # Usage
 
 Kamisama is useful for starting multiple background workers. For example, let's
