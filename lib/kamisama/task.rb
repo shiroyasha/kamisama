@@ -27,6 +27,7 @@ class Kamisama
     end
 
     def restart!
+      puts "[Kamisama Master] Restarting Worker."
       @pid = nil
       start
     end
