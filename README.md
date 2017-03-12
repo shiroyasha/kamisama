@@ -89,10 +89,10 @@ Kamisama.run(config) { |index| worker(index) }
 You can control your Kamisama process by sending kill signals to the running
 process.
 
-- [TERM]() - terminates master process and all workers
-- [KIL]()  - terminates master process and all workers
-- [TTIN]() - spawns a new worker
-- [TTIN]() - terminates a running worker
+- [TERM](#term-signal) - terminates master process and all workers
+- [KIL](#kill-signal)  - terminates master process and all workers
+- [TTIN](#ttin-signal) - spawns a new worker
+- [TTIN](#ttou-signal) - terminates a running worker
 
 #### TERM signal
 
