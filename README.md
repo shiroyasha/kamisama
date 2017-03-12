@@ -90,7 +90,7 @@ You can control your Kamisama process by sending kill signals to the running
 process.
 
 - [TERM](#term-signal) - terminates master process and all workers
-- [KIL](#kill-signal)  - terminates master process and all workers
+- [KILL](#kill-signal)  - terminates master process and all workers
 - [TTIN](#ttin-signal) - spawns a new worker
 - [TTIN](#ttou-signal) - terminates a running worker
 
