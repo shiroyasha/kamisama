@@ -33,6 +33,7 @@ class Kamisama
     end
 
     def alive?
+      return false unless @pid
       Process.getpgid(@pid)
       true
     rescue Errno::ESRCH

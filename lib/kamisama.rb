@@ -16,20 +16,39 @@ class Kamisama
     @monitor_sleep    = 2
 
     @respawn_limiter = Kamisama::RespawnLimiter.new(@respawn_limit, @respawn_interval)
+    @tasks = []
   end
 
   def run
     puts "[Kamisama Master] Process id: #{Process.pid}"
     puts "[Kamisama Master] Starting #{@instances} workers. \n"
 
-    @tasks = Array.new(@instances) { |index| Kamisama::Task.new(index, @block) }
-    @tasks.each(&:start)
+    @instances.times { add_worker }
+
+    handle_signals
 
     monitor
   end
 
+  def handle_signals
+    trap("TTIN") do
+      puts "[Kamisama Master] #{Process.pid} Spawning new instance."
+
+      @instances += 1
+    end
+  end
+
+  def add_worker
+    task = Kamisama::Task.new(@tasks.count, @block)
+    task.start
+
+    @tasks << task
+  end
+
   def monitor
     loop do
+      add_worker while @tasks.count < @instances
+
       dead_tasks = @tasks.reject(&:alive?)
 
       dead_tasks.each do |task|
