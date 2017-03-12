@@ -32,22 +32,40 @@ class Kamisama
 
   def handle_signals
     trap("TTIN") do
-      puts "[Kamisama Master] #{Process.pid} Spawning new instance."
-
       @instances += 1
+    end
+
+    trap("TTOU") do
+      # make sure that we always have at least one running worker
+      if @instances > 1
+        @instances -= 1
+      end
     end
   end
 
   def add_worker
-    task = Kamisama::Task.new(@tasks.count, @block)
+    puts "[Kamisama Master] #{Process.pid} Spawning new instance."
+
+    @worker_index ||= 0
+    @worker_index += 1
+
+    task = Kamisama::Task.new(@worker_index, @block)
     task.start
 
     @tasks << task
   end
 
+  def term_worker
+    puts "[Kamisama Master] #{Process.pid} Terminating an instance."
+
+    task = @tasks.shift
+    task.terminate!
+  end
+
   def monitor
     loop do
-      add_worker while @tasks.count < @instances
+      add_worker  while @tasks.count < @instances
+      term_worker while @tasks.count > @instances
 
       dead_tasks = @tasks.reject(&:alive?)
 
