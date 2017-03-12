@@ -12,16 +12,26 @@ module SpecHelpers
   def child_pids(pid)
     Sys::ProcTable.ps.select { |process| process.ppid == pid }.map(&:pid)
   end
+
+  def process_alive?(pid)
+    Process.getpgid(pid)
+    true
+  rescue Errno::ESRCH
+    false
+  end
 end
 
 class TestApp
 
   def self.start(options)
     pid = Process.fork do
-      Kamisama.run(:instances => options.fetch(:workers)) do |index|
+      Kamisama.run(options) do |index|
         worker(index)
       end
+      exit
     end
+
+    Process.detach(pid)
 
     # wait for children to spawn
     sleep 2
@@ -30,7 +40,7 @@ class TestApp
 
   def self.worker(index)
     while true
-      puts "worker #{index} ... crunching data ..."
+      # puts "worker #{index} ... crunching data ..."
       sleep 2
     end
   end
