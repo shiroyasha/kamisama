@@ -84,6 +84,109 @@ config = {
 Kamisama.run(config) { |index| worker(index) }
 ```
 
+## Signal control
+
+You can control your Kamisama process by sending kill signals to the running
+process.
+
+- [TERM]() - terminates master process and all workers
+- [KIL]()  - terminates master process and all workers
+- [TTIN]() - spawns a new worker
+- [TTIN]() - terminates a running worker
+
+#### TERM signal
+
+If you send a term signal to your Kamisama process, it will immediately
+shutdown. Following this, every children will be notified by the kernel that the
+master process has dies with the TERM signal.
+
+For example, if you have the following processes:
+
+``` bash
+2000 - PID of master process
+2001 - PID of first worker
+2002 - PID of second worker
+2003 - PID of third worker
+```
+
+Then when you send a "TERM" signal:
+
+``` bash
+kill -TERM 2000
+```
+
+The master process `2000` will die immediately, and the workers processes
+(2001, 2002, 2003) will receive the `TERM` signal.
+
+#### KILL signal
+
+If you send a kill signal to your Kamisama process, it will immediately
+shutdown. Following this, every children will be notified by the kernel that the
+master process has dies with the TERM signal.
+
+For example, if you have the following processes:
+
+``` bash
+2000 - PID of master process
+2001 - PID of first worker
+2002 - PID of second worker
+2003 - PID of third worker
+```
+
+Then when you send a "KILL" signal:
+
+``` bash
+kill -9 2000
+```
+
+The master process `2000` will die immediately, and the workers processes
+(2001, 2002, 2003) will receive the `TERM` signal.
+
+#### TTIN signal
+
+If you send a ttin signal to your Kamisama process, it will spawn a new process.
+
+For example, if you have the following processes:
+
+``` bash
+2000 - PID of master process
+2001 - PID of first worker
+2002 - PID of second worker
+2003 - PID of third worker
+```
+
+Then when you send a "TTIN" signal:
+
+``` bash
+kill -TTIN 2000
+```
+
+The master process `2000` will spawn a new worker process.
+
+#### TTOU signal
+
+If you send a ttou signal to your Kamisama process, it will kill the oldest
+worker.
+
+For example, if you have the following processes:
+
+``` bash
+2000 - PID of master process
+2001 - PID of first worker
+2002 - PID of second worker
+2003 - PID of third worker
+```
+
+Then when you send a "TTOU" signal:
+
+``` bash
+kill -TTOU 2000
+```
+
+The master process `2000` will send a `TERM` signal to the process `2001`.
+
+*NOTE*: This will only work if you have more than one running processes.
+
 ## License
 
 The gem is available as open source under the terms of the
