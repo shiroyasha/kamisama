@@ -98,7 +98,7 @@ process.
 
 If you send a term signal to your Kamisama process, it will immediately
 shutdown. Following this, every children will be notified by the kernel that the
-master process has dies with the TERM signal.
+master process has died with the TERM signal.
 
 For example, if you have the following processes:
 
