@@ -115,4 +115,27 @@ describe Kamisama do
     end
   end
 
+  describe "shutdown" do
+    before do
+      @pid = TestApp.start(:instances => 3)
+      expect(SpecHelpers.child_count(@pid)).to eq(3)
+    end
+
+    it "removes running workers" do
+      2.times do
+        Process.kill("TERM", @pid)
+        sleep 1
+      end
+
+      sleep 2
+
+      expect(SpecHelpers.child_count(@pid)).to eq(0)
+    end
+
+    after do
+      TestApp.stop(@pid, :signal => "KILL") if SpecHelpers.process_alive?(@pid)
+      expect(SpecHelpers.child_count(@pid)).to eq(0)
+    end
+  end
+
 end

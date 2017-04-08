@@ -15,7 +15,10 @@ class Kamisama
     @respawn_interval = options.fetch(:respawn_interval, 60)
     @monitor_sleep    = 2
 
+    @term_signal_received = false
+
     @respawn_limiter = Kamisama::RespawnLimiter.new(@respawn_limit, @respawn_interval)
+
     @tasks = []
   end
 
@@ -41,6 +44,10 @@ class Kamisama
         @instances -= 1
       end
     end
+
+    trap("TERM") do
+      @term_signal_received = true
+    end
   end
 
   def add_worker
@@ -64,6 +71,8 @@ class Kamisama
 
   def monitor
     loop do
+      break if @term_signal_received
+
       add_worker  while @tasks.count < @instances
       term_worker while @tasks.count > @instances
 
@@ -76,6 +85,10 @@ class Kamisama
 
       sleep(@monitor_sleep)
     end
+
+    puts "[Kamisama Master] #{Process.pid} Terminating all instances"
+    @tasks.each(&:terminate!)
+    exit
   end
 
 end
