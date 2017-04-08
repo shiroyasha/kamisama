@@ -1,0 +1,16 @@
+---
+IrresponsibleModule:
+  enabled: false
+
+FeatureEnvy:
+  enabled: false
+
+ControlParameter:
+  enabled: false
+
+UtilityFunction:
+  enabled: false
+
+exclude_paths:
+  - vendor
+  - .bundle
