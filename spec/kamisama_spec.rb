@@ -69,52 +69,6 @@ describe Kamisama do
     end
   end
 
-  describe "increasing worker count with TTIN signal" do
-    before do
-      @pid = TestApp.start(:instances => 3)
-      expect(SpecHelpers.child_count(@pid)).to eq(3)
-    end
-
-    it "adds a new worker" do
-      3.times do
-        Process.kill("TTIN", @pid)
-        sleep 1
-      end
-
-      sleep 2
-
-      expect(SpecHelpers.child_count(@pid)).to eq(6)
-    end
-
-    after do
-      TestApp.stop(@pid, :signal => "KILL")
-      expect(SpecHelpers.child_count(@pid)).to eq(0)
-    end
-  end
-
-  describe "decrease worker count with TTOU signal" do
-    before do
-      @pid = TestApp.start(:instances => 3)
-      expect(SpecHelpers.child_count(@pid)).to eq(3)
-    end
-
-    it "removes running workers" do
-      2.times do
-        Process.kill("TTOU", @pid)
-        sleep 1
-      end
-
-      sleep 2
-
-      expect(SpecHelpers.child_count(@pid)).to eq(1)
-    end
-
-    after do
-      TestApp.stop(@pid, :signal => "KILL")
-      expect(SpecHelpers.child_count(@pid)).to eq(0)
-    end
-  end
-
   describe "shutdown" do
     before do
       @pid = TestApp.start(:instances => 3)
@@ -122,14 +76,10 @@ describe Kamisama do
     end
 
     it "removes running workers" do
-      2.times do
-        Process.kill("TERM", @pid)
-        sleep 1
-      end
+      Process.kill("TERM", @pid)
+      sleep 1
 
-      sleep 2
-
-      expect(SpecHelpers.child_count(@pid)).to eq(0)
+      expect(SpecHelpers.process_alive?(@pid)).to be (false)
     end
 
     after do

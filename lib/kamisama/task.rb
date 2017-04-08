@@ -1,5 +1,12 @@
 class Kamisama
   class Task
+
+    def self.start(task_index, block)
+      task = new(task_index, block)
+      task.start
+      task
+    end
+
     def initialize(task_index, block)
       @task_index = task_index
       @block = block
